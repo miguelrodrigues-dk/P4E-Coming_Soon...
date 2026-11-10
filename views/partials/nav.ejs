@@ -1,0 +1,45 @@
+<!-- Importação da fonte Inter para todo o arquivo nav -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Estilização dos efeitos de Hover nos links de texto -->
+<style>
+  .nav-link-p4e {
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 20px;
+    transition: color 0.25s ease !important;
+  }
+  
+  /* Quando passa o mouse, troca a cor para um roxo claro neon descolado */
+  .nav-link-p4e:hover,
+  .nav-link-p4e:focus {
+    color: #c084fc !important; 
+    text-decoration: none;
+  }
+</style>
+
+<header class="cabecalho" style="font-family: 'Inter', sans-serif;">
+  <a class="logo-link" href="/eventos" aria-label="P4E - Página inicial">
+    <img class="logo-img" src="/Img/P4E-Logo.png" alt="P4E">
+  </a>
+
+  <nav aria-label="Navegação principal" style="display: flex; align-items: center; gap: 20px; font-family: 'Inter', sans-serif;">
+    <% if (usuario) { %>
+      <!-- Links de texto limpos em Negrito com efeito Hover Roxo Claro -->
+      <a class="nav-link-p4e" href="/eventos" style="color: #ffffff;font-size: 1.40rem;">Início</a>
+      
+      <% if (usuario.role === 'admin') { %>
+        <a class="nav-link-p4e" href="/eventos/admin/usuarios" style="color: #fffffd;font-size: 1.40rem;">Usuários</a>
+      <% } %>
+      
+      <!-- Botão de Sair Estilizado -->
+      <a class="botao" href="/eventos/logout" style="background-color: #e74c3c; color: white; padding: 8px 30px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.95rem; box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2); margin-left: 5px;">Sair</a>
+    <% } else { %>
+      <!-- Botões de Login e Cadastro -->
+      <a class="botao" href="/eventos/login" style="background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%); color: white; padding: 8px 18px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);">Login</a>
+      <a class="botao botao-cadastro" href="/eventos/cadastro" style="padding: 8px 18px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.95rem;">Criar Conta</a>
+    <% } %>
+  </nav>
+</header>

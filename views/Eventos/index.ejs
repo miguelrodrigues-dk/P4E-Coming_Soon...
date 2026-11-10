@@ -1,0 +1,117 @@
+
+<%- include('../partials/header', {
+
+}) %>
+
+<main class="container">
+
+  <!-- CARROSSEL: somente eventos destacados -->
+  <% if (destaques.length > 0) { %>
+    <section class="carrossel" aria-label="Destaques de eventos">
+
+      <% destaques.forEach((evento, indice) => { %>
+        <a
+          class="slide <%= indice === 0 ? 'ativo' : '' %>"
+          href="/eventos/<%= evento.id %>"
+          style="background-image: linear-gradient(90deg, rgba(12,8,20,.88), rgba(12,8,20,.2)), url('<%= evento.imagem %>')"
+        >
+          <div class="slide-conteudo">
+            <span class="etiqueta">DESTAQUE P4E</span>
+
+            <h2><%= evento.nome %></h2>
+
+            <p><%= evento.descricao %></p>
+
+            <span class="botao">Conhecer evento</span>
+          </div>
+        </a>
+      <% }) %>
+
+      <% if (destaques.length > 1) { %>
+        <button
+          class="seta seta-anterior"
+          type="button"
+          aria-label="Destaque anterior"
+        >‹</button>
+
+        <button
+          class="seta seta-proxima"
+          type="button"
+          aria-label="Próximo destaque"
+        >›</button>
+
+        <div class="indicadores" aria-label="Selecionar destaque"></div>
+      <% } %>
+
+    </section>
+  <% } %>
+
+  <!-- LISTA DE EVENTOS -->
+  <section id="lista-eventos" class="secao-eventos">
+
+    <div class="cabecalho-secao">
+      <div>
+        <span class="sobretitulo">
+          ENCONTRE SUA PRÓXIMA EXPERIÊNCIA
+        </span>
+
+        <h1>Eventos</h1>
+      </div>
+
+      <a href="/eventos/novo" class="botao botao-novo-evento">
+        + Novo evento
+      </a>
+    </div>
+
+    <% if (eventos.length === 0) { %>
+      <p class="sem-eventos">
+        Ainda não há eventos cadastrados. Que tal adicionar o primeiro?
+      </p>
+    <% } else { %>
+
+      <div class="grade-eventos">
+
+        <% eventos.forEach(evento => { %>
+          <article class="card-evento card-sem-imagem">
+
+            <div class="conteudo-evento">
+
+              <span class="categoria">
+                <%= evento.categoria %>
+              </span>
+
+              <h2><%= evento.nome %></h2>
+
+              <p><%= evento.descricao %></p>
+
+              <div class="metadados">
+                <span>📅 <%= evento.data %></span>
+                <span>📍 <%= evento.local %></span>
+              </div>
+
+              <% if (evento.destaque && evento.imagem) { %>
+                <span class="selo-destaque">
+                  ★ Em destaque
+                </span>
+              <% } %>
+
+              <a
+                class="botao botao-largo"
+                href="/eventos/<%= evento.id %>"
+              >
+                Ver evento e comentários
+              </a>
+
+            </div>
+          </article>
+        <% }) %>
+
+      </div>
+
+    <% } %>
+
+  </section>
+
+</main>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,182 @@
+<%- include('../partials/header') %>
+
+
+
+<main class="container pagina-detalhes">
+
+  <a class="link-voltar" href="/eventos">
+    ← Voltar aos eventos
+  </a>
+
+  <section
+    class="hero-evento"
+    style="background-image: linear-gradient(90deg, rgba(12,8,20,.88), rgba(12,8,20,.25)), url('<%= evento.imagem %>')"
+  >
+    <div>
+      <span class="etiqueta"><%= evento.categoria %></span>
+
+      <h1><%= evento.nome %></h1>
+
+      <p><%= evento.descricao %></p>
+
+      <p class="metadados-detalhe">
+        📅 <%= evento.data %>　 ·　 📍 <%= evento.local %>
+      </p>
+    </div>
+  </section>
+
+  <div class="acoes-evento">
+    <a class="botao" href="/eventos/<%= evento.id %>/editar">Editar evento</a>
+
+    <form action="/eventos/<%= evento.id %>/excluir" method="POST"
+      onsubmit="return confirm('Tem certeza de que deseja excluir este evento?')">
+      <button class="botao botao-excluir" type="submit">Excluir evento</button>
+    </form>
+  </div>
+
+  <section id="comentarios" class="comentarios">
+
+    <h2>
+      Comentários
+      <span class="contador"><%= evento.comentarios.length %></span>
+    </h2>
+
+    <form
+      class="form-comentario"
+      action="/eventos/<%= evento.id %>/comentarios"
+      method="POST"
+    >
+      <h3>Deixe sua opinião</h3>
+
+     
+
+      <label for="texto-novo">Comentário</label>
+      <textarea
+        id="texto-novo"
+        name="texto"
+        maxlength="1000"
+        required
+        placeholder="O que achou deste evento?"
+      ></textarea>
+
+      <button class="botao" type="submit">
+        Publicar comentário
+      </button>
+    </form>
+
+    <% if (evento.comentarios.length === 0) { %>
+      <p class="sem-comentarios">
+        Ainda não há comentários. Seja a primeira pessoa a comentar!
+      </p>
+    <% } %>
+
+    <div class="lista-comentarios">
+
+      <% evento.comentarios.forEach(comentario => { %>
+
+        <article
+          class="comentario"
+          id="comentario-<%= comentario.id %>"
+        >
+
+          <div class="comentario-topo">
+            <div class="avatar">
+              <%= comentario.autor.charAt(0).toUpperCase() %>
+            </div>
+
+            <div>
+              <strong><%= comentario.autor %></strong>
+              <span class="data-comentario">Comentário</span>
+            </div>
+          </div>
+
+          <p class="texto-comentario"><%= comentario.texto %></p>
+
+          <details class="acoes-comentario">
+            <summary>Editar ou excluir</summary>
+
+            <form
+              action="/eventos/<%= evento.id %>/comentarios/<%= comentario.id %>/editar"
+              method="POST"
+              class="form-inline"
+            >
+             
+
+              <label>Novo texto</label>
+              <textarea name="texto" required maxlength="1000"><%= comentario.texto %></textarea>
+
+              <button class="botao botao-pequeno" type="submit">
+                Salvar edição
+              </button>
+            </form>
+
+            <form
+              action="/eventos/<%= evento.id %>/comentarios/<%= comentario.id %>/excluir"
+              method="POST"
+              class="form-inline"
+              onsubmit="return confirm('Excluir este comentário?')"
+            >
+              <label>Confirme seu nome para excluir</label>
+              <input name="autor" required placeholder="Seu nome">
+
+              <button
+                class="botao botao-excluir botao-pequeno"
+                type="submit"
+              >
+                Excluir comentário
+              </button>
+            </form>
+          </details>
+
+          <details class="responder">
+            <summary>Responder comentário</summary>
+
+            <form
+              action="/eventos/<%= evento.id %>/comentarios/<%= comentario.id %>/respostas"
+              method="POST"
+              class="form-inline"
+            >
+              
+
+              <label>Sua resposta</label>
+              <textarea name="texto" maxlength="1000" required></textarea>
+
+              <button class="botao botao-pequeno" type="submit">
+                Enviar resposta
+              </button>
+            </form>
+          </details>
+
+          <% if (comentario.respostas.length > 0) { %>
+
+            <div class="respostas">
+              <h4>Respostas</h4>
+
+              <% comentario.respostas.forEach(resposta => { %>
+
+                <div class="resposta">
+                  <div class="comentario-topo">
+                    <div class="avatar avatar-menor">
+                      <%= resposta.autor.charAt(0).toUpperCase() %>
+                    </div>
+
+                    <strong><%= resposta.autor %></strong>
+                  </div>
+
+                  <p><%= resposta.texto %></p>
+                </div>
+
+              <% }) %>
+            </div>
+
+          <% } %>
+
+        </article>
+
+      <% }) %>
+
+    </div>
+  </section>
+</main>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,62 @@
+<%- include('../partials/header', { titulo: 'Editar evento | P4E' }) %>
+
+<main class="container pagina-detalhes">
+  <a class="link-voltar" href="/eventos/<%= evento.id %>">← Voltar aos detalhes</a>
+
+  <section class="form-comentario form-novo-evento">
+    <h1>Editar evento</h1>
+    <p class="descricao-formulario">Atualize as informações do evento abaixo.</p>
+
+    <form action="/eventos/<%= evento.id %>/editar" method="POST">
+      <label for="nome">Nome do evento</label>
+      <input id="nome" name="nome" type="text" maxlength="100" value="<%= evento.nome %>" required>
+
+      <label for="categoria">Categoria</label>
+      <select id="categoria" name="categoria" required>
+        <% ['Música', 'Social', 'Cultura', 'Tecnologia', 'Esportes', 'Educação', 'Outro'].forEach(categoria => { %>
+          <option value="<%= categoria %>" <%= evento.categoria === categoria ? 'selected' : '' %>><%= categoria %></option>
+        <% }) %>
+      </select>
+
+      <label for="data">Data do evento</label>
+      <input id="data" name="data" type="text" placeholder="DD/MM/AAAA" pattern="[0-9]{2}/[0-9]{2}/[0-9]{4}" value="<%= evento.data %>" required>
+
+      <label for="local">Local</label>
+      <input id="local" name="local" type="text" maxlength="150" value="<%= evento.local %>" required>
+
+      <label for="descricao">Descrição</label>
+      <textarea id="descricao" name="descricao" rows="5" maxlength="1500" required><%= evento.descricao %></textarea>
+
+      <div class="opcao-destaque">
+        <label class="checkbox-destaque" for="destaque">
+          <input id="destaque" name="destaque" type="checkbox" <%= evento.destaque ? 'checked' : '' %>>
+          <span>Destacar este evento no carrossel</span>
+        </label>
+      </div>
+
+      <div id="campo-imagem" <%= evento.destaque ? '' : 'hidden' %>>
+        <label for="imagem">URL da imagem de destaque</label>
+        <input id="imagem" name="imagem" type="url" value="<%= evento.imagem %>" placeholder="https://exemplo.com/imagem.jpg">
+      </div>
+
+      <div class="acoes-formulario">
+        <button class="botao" type="submit">Salvar alterações</button>
+        <a class="link-voltar" href="/eventos/<%= evento.id %>">Cancelar</a>
+      </div>
+    </form>
+  </section>
+</main>
+
+<script>
+  const checkboxDestaque = document.getElementById('destaque');
+  const campoImagem = document.getElementById('campo-imagem');
+  const inputImagem = document.getElementById('imagem');
+  function atualizarCampoImagem() {
+    campoImagem.hidden = !checkboxDestaque.checked;
+    inputImagem.required = checkboxDestaque.checked;
+  }
+  checkboxDestaque.addEventListener('change', atualizarCampoImagem);
+  atualizarCampoImagem();
+</script>
+
+<%- include('../partials/footer') %>

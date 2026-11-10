@@ -1,0 +1,110 @@
+<!-- Estrutura do Balão de Aviso Estilizado P4E (Toast Notification) -->
+<div id="p4e-toast" class="toast-balao">
+  <span class="toast-icone">⚠️</span>
+  <span id="p4e-toast-mensagem" class="toast-texto">Aviso do sistema</span>
+</div>
+
+<style>
+  /* Estilização Premium do Balão integrada ao P4E */
+  .toast-balao {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(25, 18, 41, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(168, 85, 247, 0.2);
+    padding: 16px 24px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 9999;
+    font-family: 'Inter', sans-serif;
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+  }
+
+  .toast-balao.mostrar {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  .toast-icone {
+    font-size: 1.3rem;
+  }
+
+  .toast-texto {
+    color: #f1f5f9;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+</style>
+
+<script>
+  // Função global para chamar o balão na tela
+  function mostrarAvisoP4E(mensagem) {
+    const toast = document.getElementById('p4e-toast');
+    const toastMsg = document.getElementById('p4e-toast-mensagem');
+    
+    if (toast && toastMsg) {
+      toastMsg.textContent = message = mensagem;
+      toast.classList.add('mostrar');
+      
+      // Oculta após 4 segundos se não houver redirecionamento imediato
+      setTimeout(() => {
+        toast.classList.remove('mostrar');
+      }, 4000);
+    }
+  }
+
+  // Verifica se o servidor enviou parâmetros de erro pela URL (?erro=...)
+  window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('erro')) {
+      mostrarAvisoP4E(urlParams.get('erro'));
+    }
+  });
+</script>
+
+<!-- Monitor de tempo por inatividade do P4E (20 minutos) -->
+<% if (typeof usuario !== 'undefined' && usuario) { %>
+<script>
+  const TEMPO_INATIVIDADE = 20 * 60 * 1000; // 20 minutos em milissegundos
+  let temporizador;
+
+  function resetarTemporizador() {
+    clearTimeout(temporizador);
+    
+    // Dispara a expiração e o logout automático após o tempo limite
+    temporizador = setTimeout(() => {
+      // Exibe o balão descolado na tela antes de deslogar
+      mostrarAvisoP4E("Sua sessão expirou por inatividade de 20 minutos! Desconectando...");
+      
+      // Aguarda 2.5 segundos para o usuário ver o balão e redireciona
+      setTimeout(() => {
+        window.location.href = "/eventos/logout";
+      }, 2500);
+    }, TEMPO_INATIVIDADE);
+  }
+
+  // Escuta os eventos físicos de ações do usuário para renovar o tempo
+  window.onload = resetarTemporizador;
+  window.onmousemove = resetarTemporizador;
+  window.onmousedown = resetarTemporizador; 
+  window.onclick = resetarTemporizador;     
+  window.onkeydown = resetarTemporizador;   
+</script>
+<% } %>
+
+<footer class="rodape">
+  <p>© 2026 P4E — Criando momentos inesquecíveis.</p>
+</footer>
+<script src="/js/carrossel.js"></script>
+</body>
+</html>
